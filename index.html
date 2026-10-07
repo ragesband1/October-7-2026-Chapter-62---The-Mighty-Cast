@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 62 - The Mighty Cast</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        fantasy: {
+                            gold: '#f59e0b',
+                            dark: '#0f172a',
+                            card: '#1e293b',
+                            accent: '#6366f1'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; user-select: none; }
+        h1, h2, h3, .font-cinzel { font-family: 'Cinzel', serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        .glow-text { text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+        .glow-box { box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.03); }
+        }
+        .anim-pulse { animation: pulseGlow 3s infinite ease-in-out; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col overflow-x-hidden custom-scrollbar">
+
+    <header class="bg-slate-900/90 backdrop-blur border-b border-slate-800 sticky top-0 z-50 px-4 py-3 flex justify-between items-center shadow-lg">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center shadow-md">
+                <i class="fa-solid fa-masks-theater text-white text-lg"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold font-cinzel text-amber-400 tracking-wide">Chapter 62: The Mighty Cast</h1>
+                <p class="text-xs text-slate-400">By Unfinished Victimized Theaters & The Rages Band</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-2 md:space-x-4">
+            <button onclick="game.toggleModal('codexModal')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 rounded-lg text-xs md:text-sm font-medium transition flex items-center space-x-1.5 shadow">
+                <i class="fa-solid fa-book-open"></i> <span class="hidden sm:inline">Story Lore</span>
+            </button>
+            <button onclick="game.toggleModal('questModal')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-indigo-400 border border-indigo-500/30 rounded-lg text-xs md:text-sm font-medium transition flex items-center space-x-1.5 shadow">
+                <i class="fa-solid fa-scroll"></i> <span class="hidden sm:inline">Quests</span> <span id="questBadge" class="bg-indigo-600 text-white text-[10px] px-1.5 py-0.2 rounded-full">1</span>
+            </button>
+            <button onclick="game.toggleModal('inventoryModal')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 rounded-lg text-xs md:text-sm font-medium transition flex items-center space-x-1.5 shadow">
+                <i class="fa-solid fa-backpack"></i> <span class="hidden sm:inline">Inventory</span>
+            </button>
+            <button onclick="game.toggleModal('skillsModal')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-purple-400 border border-purple-500/30 rounded-lg text-xs md:text-sm font-medium transition flex items-center space-x-1.5 shadow">
+                <i class="fa-solid fa-star"></i> <span class="hidden sm:inline">Skills</span>
+            </button>
+            <button onclick="game.toggleSound()" id="soundToggleBtn" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm transition">
+                <i class="fa-solid fa-volume-high" id="soundIcon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto p-3 md:p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        <!-- Left Sidebar: Player Stats & Quick Actions -->
+        <div class="lg:col-span-1 flex flex-col space-y-4">
+            <!-- Player Status Card -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-xl backdrop-blur">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div id="playerAvatar" class="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-xl font-bold font-cinzel text-white shadow-lg border-2 border-amber-400/50">
+                        R
+                    </div>
+                    <div>
+                        <h2 id="playerName" class="font-bold text-base text-slate-100 font-cinzel">Redmayne</h2>
+                        <p id="playerClass" class="text-xs text-amber-400 font-medium">Stubborn Actor ➔ Savior</p>
+                        <div class="flex items-center space-x-2 mt-1">
+                            <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">Level <span id="playerLevel">1</span></span>
+                            <span class="text-[10px] bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded border border-amber-500/30">XP: <span id="playerXP">0</span>/<span id="playerMaxXP">100</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Bars -->
+                <div class="space-y-3 text-xs">
+                    <div>
+                        <div class="flex justify-between mb-1 text-slate-300">
+                            <span><i class="fa-solid fa-heart text-rose-500 mr-1"></i> HP</span>
+                            <span id="playerHPTerm">100/100</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                            <div id="playerHPBar" class="bg-gradient-to-r from-rose-600 to-rose-400 h-full transition-all duration-300" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1 text-slate-300">
+                            <span><i class="fa-solid fa-masks-theater text-indigo-400 mr-1"></i> Acting Skill</span>
+                            <span id="playerActing">12</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                            <div id="playerActingBar" class="bg-gradient-to-r from-indigo-600 to-indigo-400 h-full transition-all duration-300" style="width: 25%;"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1 text-slate-300">
+                            <span><i class="fa-solid fa-shield-halved text-amber-400 mr-1"></i> Confidence</span>
+                            <span id="playerConfidence">25</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                            <div id="playerConfidenceBar" class="bg-gradient-to-r from-amber-600 to-amber-400 h-full transition-all duration-300" style="width: 35%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Quest Card -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-xl backdrop-blur flex-1 flex flex-col">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-cinzel text-sm font-bold text-amber-400 flex items-center space-x-2">
+                        <i class="fa-solid fa-compass"></i> <span>Current Objective</span>
+                    </h3>
+                    <span id="chapterIndicator" class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-bold">Ch. 1</span>
+                </div>
+                <div id="activeQuestBox" class="bg-slate-950/60 p-3 rounded-xl border border-slate-800 text-xs text-slate-300 space-y-2 mb-4 flex-1">
+                    <p class="font-semibold text-slate-100" id="questTitle">Introduction to Role Play</p>
+                    <p id="questDesc" class="text-slate-400 leading-relaxed">Redmayne doesn't want to participate in the Grade 6 Section A role play. He thinks he can be the best actor without reading scripts. Face the consequence of pride!</p>
+                </div>
+                <button onclick="game.advanceStory()" id="actionBtn" class="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold rounded-xl text-xs transition shadow-lg flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-play"></i> <span>Proceed Action / Dialogue</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Center / Right: Interactive Canvas World & Dialogue / Combat Screen -->
+        <div class="lg:col-span-3 flex flex-col space-y-4">
+            
+            <!-- Game Canvas / World Viewport -->
+            <div class="relative bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col" style="min-height: 420px;">
+                <div class="absolute top-3 left-3 z-20 flex items-center space-x-2 bg-slate-950/80 backdrop-blur px-3 py-1.5 rounded-xl border border-slate-800 text-xs">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span id="currentLocationName" class="font-semibold text-slate-200">Theatre School - Classroom A</span>
+                </div>
+                
+                <div class="absolute top-3 right-3 z-20 flex items-center space-x-2 bg-slate-950/80 backdrop-blur px-3 py-1.5 rounded-xl border border-slate-800 text-xs text-slate-300">
+                    <i class="fa-solid fa-gamepad text-indigo-400"></i>
+                    <span>Use WASD / Arrow Keys or On-Screen Controls</span>
+                </div>
+
+                <!-- Canvas -->
+                <div class="flex-1 relative flex items-center justify-center bg-slate-950 cursor-crosshair overflow-hidden" id="canvasContainer">
+                    <canvas id="gameCanvas" class="w-full h-full block" width="800" height="450"></canvas>
+                    
+                    <!-- Combat Overlay (hidden by default) -->
+                    <div id="combatOverlay" class="absolute inset-0 bg-slate-950/95 backdrop-blur-md flex flex-col justify-between p-6 hidden z-30">
+                        <div class="flex justify-between items-center bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+                            <div>
+                                <span class="text-xs text-rose-400 font-bold uppercase tracking-wider">Boss Battle</span>
+                                <h3 id="bossName" class="text-lg font-bold font-cinzel text-slate-100">Alakazam (Wicked God)</h3>
+                            </div>
+                            <div class="w-1/2 text-right">
+                                <div class="flex justify-between text-xs text-slate-300 mb-1">
+                                    <span>HP: <span id="bossHP">300</span>/300</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden border border-slate-700">
+                                    <div id="bossHPBar" class="bg-gradient-to-r from-rose-600 to-amber-500 h-full transition-all duration-300" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Battle Arena Center -->
+                        <div class="flex items-center justify-around my-auto py-4">
+                            <div class="text-center">
+                                <div class="w-20 h-20 rounded-2xl bg-indigo-600/30 border-2 border-indigo-500 flex items-center justify-center text-3xl shadow-xl mx-auto mb-2 text-indigo-300 anim-pulse">
+                                    <i class="fa-solid fa-user-ninja"></i>
+                                </div>
+                                <span class="text-xs font-bold text-slate-200">Redmayne (Savior)</span>
+                            </div>
+                            <div class="text-2xl font-bold font-cinzel text-amber-500 animate-bounce">VS</div>
+                            <div class="text-center">
+                                <div class="w-20 h-20 rounded-2xl bg-rose-600/30 border-2 border-rose-500 flex items-center justify-center text-3xl shadow-xl mx-auto mb-2 text-rose-300 anim-pulse">
+                                    <i class="fa-solid fa-skull"></i>
+                                </div>
+                                <span class="text-xs font-bold text-rose-300">Alakazam</span>
+                            </div>
+                        </div>
+
+                        <!-- Battle Actions -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            <button onclick="game.combatAction('commandments')" class="p-3 bg-slate-900 hover:bg-slate-800 border border-amber-500/40 rounded-xl text-left transition shadow group">
+                                <span class="block text-xs font-bold text-amber-400 group-hover:text-amber-300"><i class="fa-solid fa-book-bible mr-1"></i> 10 Commandments</span>
+                                <span class="text-[10px] text-slate-400">Command Alakazam to drop knife.</span>
+                            </button>
+                            <button onclick="game.combatAction('mercy')" class="p-3 bg-slate-900 hover:bg-slate-800 border border-indigo-500/40 rounded-xl text-left transition shadow group">
+                                <span class="block text-xs font-bold text-indigo-400 group-hover:text-indigo-300"><i class="fa-solid fa-hand-holding-heart mr-1"></i> Mercy Argument</span>
+                                <span class="text-[10px] text-slate-400">Plead for ethical harmony.</span>
+                            </button>
+                            <button onclick="game.combatAction('script')" class="p-3 bg-slate-900 hover:bg-slate-800 border border-emerald-500/40 rounded-xl text-left transition shadow group">
+                                <span class="block text-xs font-bold text-emerald-400 group-hover:text-emerald-300"><i class="fa-solid fa-scroll mr-1"></i> Script Recall</span>
+                                <span class="text-[10px] text-slate-400">Recite the Mighty Cast lines.</span>
+                            </button>
+                            <button onclick="game.combatAction('ultimate')" class="p-3 bg-slate-900 hover:bg-slate-800 border border-purple-500/40 rounded-xl text-left transition shadow group">
+                                <span class="block text-xs font-bold text-purple-400 group-hover:text-purple-300"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Divine Transformation</span>
+                                <span class="text-[10px] text-slate-400">Become a living god with 31 Brusbound.</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- On-Screen Controls for mobile/tablet -->
+                <div class="bg-slate-950 p-3 border-t border-slate-800 flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs text-slate-400 font-medium">Movement:</span>
+                        <div class="grid grid-cols-3 gap-1">
+                            <div></div>
+                            <button onclick="game.movePlayer('up')" class="w-8 h-8 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded flex items-center justify-center text-xs shadow"><i class="fa-solid fa-arrow-up"></i></button>
+                            <div></div>
+                            <button onclick="game.movePlayer('left')" class="w-8 h-8 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded flex items-center justify-center text-xs shadow"><i class="fa-solid fa-arrow-left"></i></button>
+                            <button onclick="game.movePlayer('down')" class="w-8 h-8 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded flex items-center justify-center text-xs shadow"><i class="fa-solid fa-arrow-down"></i></button>
+                            <button onclick="game.movePlayer('right')" class="w-8 h-8 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded flex items-center justify-center text-xs shadow"><i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="game.interact()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-xs transition shadow flex items-center space-x-1.5">
+                            <i class="fa-solid fa-hand"></i> <span>Interact / Talk</span>
+                        </button>
+                        <button onclick="game.switchLocation()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-semibold rounded-xl text-xs transition shadow flex items-center space-x-1.5">
+                            <i class="fa-solid fa-map-location-dot"></i> <span id="switchLocText">Go to Castle</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Story Dialogue / Narrative Box -->
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl backdrop-blur">
+                <div class="flex items-center space-x-2 mb-2">
+                    <span id="speakerName" class="text-xs font-bold text-amber-400 font-cinzel uppercase tracking-wider">Narrator</span>
+                    <span class="text-[10px] text-slate-500">• The Mighty Cast</span>
+                </div>
+                <p id="dialogueText" class="text-sm text-slate-200 leading-relaxed min-h-[48px]">
+                    Welcome to Chapter 62: Bedtime Stories & The Mighty Cast. Redmayne is faced with a choice in Theatre School Section A: participate or face expulsion!
+                </p>
+            </div>
+        </div>
+    </main>
+
+    
+    <!-- Codex / Story Lore Modal -->
+    <div id="codexModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+            <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
+                <h3 class="font-cinzel text-base font-bold text-amber-400 flex items-center space-x-2">
+                    <i class="fa-solid fa-book-open"></i> <span>Story Codex & Chapters</span>
+                </h3>
+                <button onclick="game.toggleModal('codexModal')" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-6 text-xs text-slate-300 custom-scrollbar leading-relaxed">
+                <div>
+                    <h4 class="font-bold text-amber-400 text-sm font-cinzel mb-1">Introduction & The Mighty Cast Background</h4>
+                    <p class="text-slate-400">From the creations of Unfinished Victimized Theaters And "The Rages Band". Chapter 62: Bedtime Stories. Set in Theatre School Section Participation A.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-indigo-400 text-sm font-cinzel mb-1">Chapter 1: Introduction To Lack Of Concerning In Role Play</h4>
+                    <p class="text-slate-400">Redmayne wants to become lazy and stupid for grades, refusing to participate in the Grade 6 Section A play. He is kicked out by his classmates for his pride.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-indigo-400 text-sm font-cinzel mb-1">Chapter 2: Face The Consequence Of Not Believing</h4>
+                    <p class="text-slate-400">Two weeks are given by the teacher. Redmayne is left behind while his classmates practice their script, prop making, and stage confidence to achieve a 100% grade.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-indigo-400 text-sm font-cinzel mb-1">Chapter 3: Redmayne Finish The Story & Save 31 Gods</h4>
+                    <p class="text-slate-400">Redmayne changes his mind, enters the stage, and confronts Alakazam using the 10 Commandments. He saves the 31 Brusbound gods and is transformed into a living god.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-indigo-400 text-sm font-cinzel mb-1">Chapter 4: Redmayne Becomes A Leader And A Learner</h4>
+                    <p class="text-slate-400">They receive a 100% grade, Redmayne is awarded best actor, and he is nominated as class president of Participation A.</p>
+                </div>
+                <div class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl">
+                    <h4 class="font-bold text-amber-400 font-cinzel mb-1">Moral Lesson</h4>
+                    <p class="text-amber-200/90 italic">"Be eager to think the positivity than a negative loss of having enough. If you must been wiser like active and not passive... be initiative be focused than not concerning."</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quest Log Modal -->
+    <div id="questModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+            <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
+                <h3 class="font-cinzel text-base font-bold text-indigo-400 flex items-center space-x-2">
+                    <i class="fa-solid fa-scroll"></i> <span>Quest Journal</span>
+                </h3>
+                <button onclick="game.toggleModal('questModal')" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="questListContainer" class="p-4 overflow-y-auto space-y-3 text-xs custom-scrollbar">
+                <!-- Dynamically populated quests -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory Modal -->
+    <div id="inventoryModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+            <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
+                <h3 class="font-cinzel text-base font-bold text-emerald-400 flex items-center space-x-2">
+                    <i class="fa-solid fa-backpack"></i> <span>Inventory & Equipment</span>
+                </h3>
+                <button onclick="game.toggleModal('inventoryModal')" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="inventoryContainer" class="p-4 overflow-y-auto grid grid-cols-2 gap-3 text-xs custom-scrollbar">
+                <!-- Dynamically populated items -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Skills Modal -->
+    <div id="skillsModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+            <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
+                <h3 class="font-cinzel text-base font-bold text-purple-400 flex items-center space-x-2">
+                    <i class="fa-solid fa-star"></i> <span>Skill Tree & Abilities</span>
+                </h3>
+                <button onclick="game.toggleModal('skillsModal')" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="skillsContainer" class="p-4 overflow-y-auto space-y-3 text-xs custom-scrollbar">
+                <!-- Dynamically populated skills -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 border border-amber-500/50 text-amber-300 px-4 py-3 rounded-xl shadow-2xl z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center space-x-2 text-xs font-semibold">
+        <i class="fa-solid fa-bell text-amber-400"></i>
+        <span id="toastMsg">Quest Updated!</span>
+    </div>
+
+    <script>
+        // Web Audio Sound Synthesizer
+        class SoundEngine {
+            constructor() {
+                this.ctx = null;
+                this.enabled = true;
+            }
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            }
+            playTone(freq, type, duration) {
+                if (!this.enabled) return;
+                try {
+                    this.init();
+                    if (this.ctx.state === 'suspended') {
+                        this.ctx.resume();
+                    }
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                    gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + duration);
+                } catch(e) {}
+            }
+            click() { this.playTone(600, 'sine', 0.1); }
+            success() { 
+                this.playTone(440, 'triangle', 0.15);
+                setTimeout(() => this.playTone(660, 'triangle', 0.2), 150);
+            }
+            combat() { this.playTone(150, 'sawtooth', 0.2); }
+            victory() {
+                [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+                    setTimeout(() => this.playTone(f, 'sine', 0.3), i * 150);
+                });
+            }
+        }
+
+        // Game State & Engine
+        class MightyCastGame {
+            constructor() {
+                this.sound = new SoundEngine();
+                this.player = {
+                    name: "Redmayne",
+                    className: "Stubborn Actor",
+                    level: 1,
+                    xp: 0,
+                    maxXp: 100,
+                    hp: 100,
+                    maxHp: 100,
+                    acting: 12,
+                    confidence: 25,
+                    skillPoints: 2
+                };
+                this.currentChapter = 1;
+                this.currentLocation = 'school'; // school or castle
+                this.playerPos = { x: 100, y: 200 };
+                this.bossHP = 300;
+                this.bossMaxHP = 300;
+                this.inCombat = false;
+                
+                this.quests = [
+                    { id: 1, title: "Chapter 1: Refuse the Script", desc: "Redmayne refuses to participate in Theatre School Section A role play. Talk to your classmates or proceed action.", completed: false, active: true },
+                    { id: 2, title: "Chapter 2: Face the Consequence", desc: "Practice memorizing lines while classmates rehearse props and costumes over 1 week.", completed: false, active: false },
+                    { id: 3, title: "Chapter 3: Confront Alakazam", desc: "Use the 10 Commandments to command Alakazam to put down the knife and save the 31 Brusbound gods.", completed: false, active: false },
+                    { id: 4, title: "Chapter 4: Become Class President", desc: "Receive 100% grade, earn Best Actor award, and become Class President of Participation A.", completed: false, active: false }
+                ];
+
+                this.inventory = [
+                    { id: 'script', name: 'Unopened Script', type: 'Quest Item', desc: 'The script of The Mighty Cast that Redmayne initially ignored.', icon: 'fa-scroll', equipped: false },
+                    { id: 'commandments', name: '10 Commandments', type: 'Divine Artifact', desc: 'Moral laws used to command wicked gods like Alakazam.', icon: 'fa-book-bible', equipped: true },
+                    { id: 'badge', name: 'Best Actor Badge', type: 'Accessory', desc: 'Awarded for exceptional performance on stage.', icon: 'fa-award', equipped: false }
+                ];
+
+                this.skills = [
+                    { id: 'initiative', name: 'Initiative Focus', level: 1, max: 3, desc: 'Boosts Acting Skill and time management.', cost: 1 },
+                    { id: 'divine_mercy', name: 'Divine Mercy', level: 0, max: 3, desc: 'Unlocks powerful arguments against boss enemies.', cost: 1 },
+                    { id: 'best_actor', name: 'Ultimate Best Actor', level: 0, max: 1, desc: 'Guarantees 100% grade on stage performance.', cost: 2 }
+                ];
+
+                this.dialogues = {
+                    1: [
+                        { speaker: "Grade 6 Classmates", text: "Hey you! Redmayne why are you not participating in our masterpiece? This is your chance to prove you are the best actor!" },
+                        { speaker: "Redmayne (Stubborn)", text: "I don't want to belong in the act. I'm still the best actor without reading any script!" },
+                        { speaker: "Grade 6 Classmates", text: "You fool! You're not focusing. Good luck for your grades, you are now kicked out of Section A role play!" }
+                    ],
+                    2: [
+                        { speaker: "Theatre Teacher", text: "You only have 2 weeks to finish training and memorize your roles. Be ready on stage!" },
+                        { speaker: "Grade 6 Students", text: "We must memorize our roles with no copy. Speak with confidence and eye contact for a 100% grade!" },
+                        { speaker: "Redmayne (Worried)", text: "I am late in representing, feeling turbulent in my thoughts... but I must change myself." }
+                    ],
+                    3: [
+                        { speaker: "Alakazam (Wicked God)", text: "I don't care about you 31 Brusbound gods! I will kill you all with my wicked punishment!" },
+                        { speaker: "Redmayne (Savior)", text: "Stop! Put down the knife Alakazam according to the 10 commandments, or you will be perished!" },
+                        { speaker: "Alakazam", text: "No! I deceive no 31 gods here..." },
+                        { speaker: "31 Brusbound Gods", text: "Thanks for saving our justice Redmayne! Can you change us into a living god?" }
+                    ],
+                    4: [
+                        { speaker: "Teachers & Audience", text: "Well done Redmayne! You fulfilled your role. You are rewarded Best Actor with a 100% grade!" },
+                        { speaker: "Grade 6 Classmates", text: "We're so sorry we rejected you. You fought for our grades!" },
+                        { speaker: "Redmayne (Class President)", text: "No more regrets! We can do it together as class president of Participation A." }
+                    ]
+                };
+
+                this.dialogueIndex = 0;
+            }
+
+            init() {
+                this.setupCanvas();
+                this.updateUI();
+                this.renderQuests();
+                this.renderInventory();
+                this.renderSkills();
+                
+                window.addEventListener('resize', () => this.setupCanvas());
+                window.addEventListener('keydown', (e) => {
+                    if (this.inCombat) return;
+                    if (e.key === 'w' || e.key === 'ArrowUp') this.movePlayer('up');
+                    if (e.key === 's' || e.key === 'ArrowDown') this.movePlayer('down');
+                    if (e.key === 'a' || e.key === 'ArrowLeft') this.movePlayer('left');
+                    if (e.key === 'd' || e.key === 'ArrowRight') this.movePlayer('right');
+                    if (e.key === 'e' || e.key === 'Enter') this.interact();
+                });
+
+                this.startLoop();
+            }
+
+            setupCanvas() {
+                const canvas = document.getElementById('gameCanvas');
+                const container = document.getElementById('canvasContainer');
+                canvas.width = container.clientWidth;
+                canvas.height = container.clientHeight || 400;
+            }
+
+            startLoop() {
+                const canvas = document.getElementById('gameCanvas');
+                const ctx = canvas.getContext('2d');
+
+                const render = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    // Draw background grid / environment based on location
+                    if (this.currentLocation === 'school') {
+                        // School Theatre Stage Background
+                        ctx.fillStyle = '#090d16';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        
+                        // Stage floor lines
+                        ctx.strokeStyle = '#1e293b';
+                        ctx.lineWidth = 2;
+                        for (let i = 0; i < canvas.width; i += 40) {
+                            ctx.beginPath();
+                            ctx.moveTo(i, 0);
+                            ctx.lineTo(i, canvas.height);
+                            ctx.stroke();
+                        }
+
+                        // Draw Classmates NPCs
+                        ctx.fillStyle = '#6366f1';
+                        ctx.beginPath();
+                        ctx.arc(canvas.width * 0.7, canvas.height * 0.5, 20, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = '10px Inter';
+                        ctx.fillText('Grade 6 Classmates', canvas.width * 0.7 - 40, canvas.height * 0.5 - 28);
+
+                        // Draw Teacher NPC
+                        ctx.fillStyle = '#8b5cf6';
+                        ctx.beginPath();
+                        ctx.arc(canvas.width * 0.3, canvas.height * 0.3, 20, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillText('Theatre Teacher', canvas.width * 0.3 - 35, canvas.height * 0.3 - 28);
+
+                    } else {
+                        // Castle of 31 Brusbound Gods Background
+                        ctx.fillStyle = '#111827';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                        // Castle pillars
+                        ctx.fillStyle = '#1f2937';
+                        ctx.fillRect(50, 50, 40, canvas.height - 100);
+                        ctx.fillRect(canvas.width - 90, 50, 40, canvas.height - 100);
+
+                        // Draw 31 Gods representation
+                        ctx.fillStyle = '#f59e0b';
+                        for (let i = 0; i < 5; i++) {
+                            ctx.beginPath();
+                            ctx.arc(120 + i * 50, canvas.height * 0.3, 12, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillText('31 Brusbound Gods', 120, canvas.height * 0.3 - 20);
+
+                        // Draw Alakazam Boss
+                        ctx.fillStyle = '#e11d48';
+                        ctx.beginPath();
+                        ctx.arc(canvas.width * 0.75, canvas.height * 0.5, 25, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillText('Alakazam (Wicked God)', canvas.width * 0.75 - 55, canvas.height * 0.5 - 35);
+                    }
+
+                    // Draw Player Character (Redmayne)
+                    ctx.fillStyle = '#f59e0b';
+                    ctx.beginPath();
+                    ctx.arc(this.playerPos.x, this.playerPos.y, 18, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 11px Inter';
+                    ctx.fillText('Redmayne', this.playerPos.x - 25, this.playerPos.y - 25);
+
+                    requestAnimationFrame(render);
+                };
+
+                render();
+            }
+
+            movePlayer(dir) {
+                const step = 25;
+                const canvas = document.getElementById('gameCanvas');
+                if (dir === 'up') this.playerPos.y = Math.max(30, this.playerPos.y - step);
+                if (dir === 'down') this.playerPos.y = Math.min(canvas.height - 30, this.playerPos.y + step);
+                if (dir === 'left') this.playerPos.x = Math.max(30, this.playerPos.x - step);
+                if (dir === 'right') this.playerPos.x = Math.min(canvas.width - 30, this.playerPos.x + step);
+                this.sound.click();
+            }
+
+            interact() {
+                this.sound.click();
+                this.showToast("Interacted with environment! Check active dialogues.");
+                this.advanceStory();
+            }
+
+            switchLocation() {
+                this.sound.click();
+                if (this.currentLocation === 'school') {
+                    this.currentLocation = 'castle';
+                    document.getElementById('currentLocationName').innerText = "Castle of the 31 Brusbound Gods";
+                    document.getElementById('switchLocText').innerText = "Return to School";
+                    this.showToast("Arrived at the Castle! Alakazam is wreaking havoc!");
+                    if (this.currentChapter >= 3) {
+                        this.startCombat();
+                    }
+                } else {
+                    this.currentLocation = 'school';
+                    document.getElementById('currentLocationName').innerText = "Theatre School - Classroom A";
+                    document.getElementById('switchLocText').innerText = "Go to Castle";
+                    this.showToast("Returned to Theatre School.");
+                }
+            }
+
+            advanceStory() {
+                this.sound.click();
+                const list = this.dialogues[this.currentChapter];
+                if (!list) return;
+
+                if (this.dialogueIndex < list.length) {
+                    const current = list[this.dialogueIndex];
+                    document.getElementById('speakerName').innerText = current.speaker;
+                    document.getElementById('dialogueText').innerText = current.text;
+                    this.dialogueIndex++;
+                } else {
+                    // Chapter progression
+                    if (this.currentChapter < 4) {
+                        this.currentChapter++;
+                        this.dialogueIndex = 0;
+                        document.getElementById('chapterIndicator').innerText = `Ch. ${this.currentChapter}`;
+                        this.updateQuestProgress();
+                        this.sound.success();
+                        this.showToast(`Advanced to Chapter ${this.currentChapter}!`);
+                        
+                        if (this.currentChapter === 3) {
+                            this.switchLocation();
+                        }
+                    } else {
+                        this.sound.victory();
+                        this.showToast("Story Completed! Redmayne is Class President!");
+                    }
+                }
+            }
+
+            startCombat() {
+                this.inCombat = true;
+                document.getElementById('combatOverlay').classList.remove('hidden');
+                this.sound.combat();
+            }
+
+            combatAction(type) {
+                this.sound.click();
+                let dmg = 85;
+                if (type === 'commandments') dmg = 120;
+                if (type === 'ultimate') dmg = 200;
+
+                this.bossHP = Math.max(0, this.bossHP - dmg);
+                document.getElementById('bossHP').innerText = this.bossHP;
+                document.getElementById('bossHPBar').style.width = `${(this.bossHP / this.bossMaxHP) * 100}%`;
+
+                if (this.bossHP === 0) {
+                    this.sound.victory();
+                    this.showToast("Alakazam defeated! 31 Gods saved!");
+                    document.getElementById('combatOverlay').classList.add('hidden');
+                    this.inCombat = false;
+                    this.player.xp += 100;
+                    if (this.player.xp >= this.player.maxXp) {
+                        this.player.level++;
+                        this.player.xp = 0;
+                        this.player.maxXp += 50;
+                        this.player.maxHp += 20;
+                        this.player.hp = this.player.maxHp;
+                    }
+                    this.currentChapter = 4;
+                    document.getElementById('chapterIndicator').innerText = `Ch. 4`;
+                    this.updateQuestProgress();
+                    this.updateUI();
+                } else {
+                    this.showToast(`Dealt ${dmg} damage with ${type}! Alakazam retreats!`);
+                }
+            }
+
+            updateQuestProgress() {
+                this.quests.forEach((q, i) => {
+                    if (i + 1 < this.currentChapter) q.completed = true;
+                    if (i + 1 === this.currentChapter) q.active = true;
+                    else q.active = false;
+                });
+                this.renderQuests();
+                document.getElementById('questBadge').innerText = this.currentChapter;
+                const activeQ = this.quests.find(q => q.active);
+                if (activeQ) {
+                    document.getElementById('questTitle').innerText = activeQ.title;
+                    document.getElementById('questDesc').innerText = activeQ.desc;
+                }
+            }
+
+            toggleModal(modalId) {
+                this.sound.click();
+                const modal = document.getElementById(modalId);
+                modal.classList.toggle('hidden');
+            }
+
+            toggleSound() {
+                this.sound.enabled = !this.sound.enabled;
+                const icon = document.getElementById('soundIcon');
+                if (this.sound.enabled) {
+                    icon.className = "fa-solid fa-volume-high";
+                    this.showToast("Sound Enabled");
+                } else {
+                    icon.className = "fa-solid fa-volume-xmark";
+                    this.showToast("Sound Muted");
+                }
+            }
+
+            showToast(msg) {
+                const toast = document.getElementById('toast');
+                document.getElementById('toastMsg').innerText = msg;
+                toast.classList.remove('translate-y-20', 'opacity-0');
+                setTimeout(() => {
+                    toast.classList.add('translate-y-20', 'opacity-0');
+                }, 3000);
+            }
+
+            updateUI() {
+                document.getElementById('playerLevel').innerText = this.player.level;
+                document.getElementById('playerXP').innerText = this.player.xp;
+                document.getElementById('playerMaxXP').innerText = this.player.maxXp;
+                document.getElementById('playerHPTerm').innerText = `${this.player.hp}/${this.player.maxHp}`;
+                document.getElementById('playerHPBar').style.width = `${(this.player.hp / this.player.maxHp) * 100}%`;
+                document.getElementById('playerActing').innerText = this.player.acting;
+                document.getElementById('playerActingBar').style.width = `${Math.min(100, this.player.acting * 4)}%`;
+                document.getElementById('playerConfidence').innerText = this.player.confidence;
+                document.getElementById('playerConfidenceBar').style.width = `${Math.min(100, this.player.confidence * 2)}%`;
+            }
+
+            renderQuests() {
+                const container = document.getElementById('questListContainer');
+                container.innerHTML = this.quests.map(q => `
+                    <div class="bg-slate-950/60 p-3 rounded-xl border ${q.active ? 'border-amber-500/50' : 'border-slate-800'} space-y-1">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-slate-100">${q.title}</span>
+                            <span class="text-[10px] px-2 py-0.5 rounded ${q.completed ? 'bg-emerald-500/20 text-emerald-400' : q.active ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-800 text-slate-400'}">
+                                ${q.completed ? 'Completed' : q.active ? 'Active' : 'Locked'}
+                            </span>
+                        </div>
+                        <p class="text-slate-400 leading-relaxed">${q.desc}</p>
+                    </div>
+                `).join('');
+            }
+
+            renderInventory() {
+                const container = document.getElementById('inventoryContainer');
+                container.innerHTML = this.inventory.map(item => `
+                    <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800 flex flex-col justify-between space-y-2">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                                <i class="fa-solid ${item.icon}"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-100 text-xs">${item.name}</span>
+                                <span class="block text-[10px] text-slate-500">${item.type}</span>
+                            </div>
+                        </div>
+                        <p class="text-[10px] text-slate-400">${item.desc}</p>
+                    </div>
+                `).join('');
+            }
+
+            renderSkills() {
+                const container = document.getElementById('skillsContainer');
+                container.innerHTML = this.skills.map(skill => `
+                    <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+                        <div>
+                            <span class="font-bold text-slate-100">${skill.name} (Lvl ${skill.level}/${skill.max})</span>
+                            <p class="text-slate-400 text-[10px]">${skill.desc}</p>
+                        </div>
+                        <button onclick="game.upgradeSkill('${skill.id}')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded-lg text-xs transition shadow">
+                            Upgrade
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            upgradeSkill(id) {
+                this.sound.success();
+                const skill = this.skills.find(s => s.id === id);
+                if (skill && skill.level < skill.max) {
+                    skill.level++;
+                    this.player.acting += 5;
+                    this.player.confidence += 10;
+                    this.renderSkills();
+                    this.updateUI();
+                    this.showToast(`Upgraded ${skill.name}!`);
+                } else {
+                    this.showToast("Skill is already maxed or cannot be upgraded.");
+                }
+            }
+        }
+
+        const game = new MightyCastGame();
+        window.onload = () => {
+            game.init();
+        };
+    </script>
+</body>
+</html>
